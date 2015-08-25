@@ -3,6 +3,7 @@ package com.example.lll.smstest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
@@ -15,6 +16,8 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private TextView sender;
     private TextView content;
+    private IntentFilter receiverFilter;
+    private MessageReceiver messageReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +25,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sender = (TextView) findViewById(R.id.sender);
         content = (TextView) findViewById(R.id.content);
+        receiverFilter = new IntentFilter();
+        receiverFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        receiverFilter.setPriority(100);
+        messageReceiver = new MessageReceiver();
+        registerReceiver(messageReceiver,receiverFilter);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(messageReceiver);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -62,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 sender.setText(address);
                 content.setText(fullMessage);
+                abortBroadcast();
             }
 
         }
