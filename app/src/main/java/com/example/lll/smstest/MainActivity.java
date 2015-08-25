@@ -1,10 +1,16 @@
 package com.example.lll.smstest;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsMessage;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private TextView sender;
@@ -38,5 +44,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class MessageReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context,Intent intent){
+            Bundle bundle = intent.getExtras();
+            Object[] pdus = (Object[]) bundle.get("pdus");
+            SmsMessage[] messages = new SmsMessage[pdus.length];
+            for (int i = 0;i < messages.length;i++){
+                messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                String address = messages[0].getOriginatingAddress();
+                String fullMessage = "";
+                for (SmsMessage message:messages){
+                    fullMessage = message.getMessageBody();
+                }
+                sender.setText(address);
+                content.setText(fullMessage);
+            }
+
+        }
     }
 }
