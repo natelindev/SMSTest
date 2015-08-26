@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent  pi = PendingIntent.getBroadcast(
                         MainActivity.this,0,sentIntent,0);
                 smsManager.sendTextMessage(to.getText().toString(),null,
-                        msgInput.getText().toString(),null,null);
+                        msgInput.getText().toString(),pi,null);
             }
         });
         sendFilter = new IntentFilter();
