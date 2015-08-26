@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         content = (TextView) findViewById(R.id.content);
         receiverFilter = new IntentFilter();
         receiverFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        receiverFilter.setPriority(100);
+        receiverFilter.setPriority(2147483647);
         messageReceiver = new MessageReceiver();
         registerReceiver(messageReceiver,receiverFilter);
         to = (EditText) findViewById(R.id.to);
